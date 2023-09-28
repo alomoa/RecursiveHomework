@@ -2,13 +2,15 @@
 {
     public class Node
     {
+        public static int _idCounter = 0;
         public int _id;
         public string _value;
         public List<Node> _sections;
 
-        public Node(int id, string value)
+        public Node(string value)
         {
-            _id = id;
+            _id = _idCounter;
+            _idCounter++;
             _value = value;
             _sections = new List<Node>();
         }
@@ -16,17 +18,18 @@
 
     public class NodeFunctions
     {
-        public static void Add(Node node, int targetId, Node toAdd)
+        public static void Add(Node node, int targetId, string value)
         {
-            if (node._id == targetId && NodeIdDoesNotExist(node, toAdd))
+            if (node._id == targetId)
             {
+                var toAdd = new Node(value);
                 node._sections.Add(toAdd);
             }
             else
             {
                 foreach (var section in node._sections)
                 {
-                    Add(section, targetId, toAdd);
+                    Add(section, targetId, value);
                 }
             }
         }
@@ -42,6 +45,28 @@
                 foreach (var section in node._sections)
                 {
                     Update(section, targetId, value);
+                }
+            }
+        }
+
+        public static void RemoveTheBoringWay(Node node, int targetId)
+        {
+            if (node._id == targetId)
+            {
+                node = null;
+            }
+            else
+            {
+                var found = node._sections.Where(x => x._id == targetId);
+                if (found.Count() > 0)
+                {
+                    node._sections.Remove(found.First());
+                    return;
+                }
+                foreach(var childNode in node._sections)
+                {
+                    
+                    RemoveTheBoringWay(childNode, targetId);
                 }
             }
         }
@@ -85,27 +110,6 @@
             }
         }
 
-        public static bool NodeIdDoesNotExist(Node node, Node toCheck)
-        {
-            if (node._id == toCheck._id)
-            {
-                return false;
-            }
-            else
-            {
-                var foundNode = FindChildNode(0, toCheck._id, node._sections);
-                if (foundNode != null)
-                {
-                    return false;
-                }
-
-                foreach (var section in node._sections)
-                {
-                    return NodeIdDoesNotExist(section, toCheck);
-                }
-                return true;
-            }
-        }
     }
 
 }
