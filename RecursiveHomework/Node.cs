@@ -93,6 +93,31 @@
             }
         }
 
+        public static Node FindNode(Node node, int targetId)
+        {
+            if (node._id == targetId)
+            {
+                return node; 
+            }
+            else
+            {
+                var found = node._sections.Where(x => x._id == targetId);
+                if (found.Count() > 0)
+                {
+                    return found.First();
+                }
+                else
+                {
+                    foreach (var childNode in node._sections)
+                    {
+
+                        return FindNode(childNode, targetId);
+                    }
+                }
+            }
+            return null;
+        }
+
         public static Node FindChildNode(int index, int idToFind, List<Node> children)
         {
             if (index == children.Count)

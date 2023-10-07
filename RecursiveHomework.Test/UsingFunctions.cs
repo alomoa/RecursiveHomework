@@ -230,5 +230,21 @@ namespace RecursibeHomework.Test
             //Assert
             Assert.That(result, Is.EqualTo(null));
         }
+
+        [Test]
+        public void FindNode_DeepNode()
+        {
+            //Arrange
+            for(var i = 0; i < 100; i++)
+            {
+                NodeFunctions.Add(root, i, i.ToString());
+            }
+
+            //Act
+            var result = NodeFunctions.FindNode(root, 99);
+
+            //Assert
+            Assert.That(result._value, Is.EqualTo("98"));
+        }
     }
 }
